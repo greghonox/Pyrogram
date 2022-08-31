@@ -2,8 +2,8 @@ from pyrogram import Client
 from datetime import datetime
 
 data = lambda x: int(datetime.now().strftime(x))
-api_id = 19961353
-api_hash = '76556f555c06408a2c140ca7186071ee'
+api_id = 0
+api_hash = ''
 
 phrases_jobs = ['python', 'django', 'back end']
 data_limit = datetime(data('%Y'), data('%m'), 1)
@@ -27,14 +27,12 @@ async def main():
                         continue
 
                     if any(phrase.lower() in message.text.lower()  for phrase in phrases_jobs):
-                        job = f'{message.forward_date}\n{message.text}\n{message.link}\n'
+                        job = f'{message.forward_date}\n{message.text}\n{message.link}\n' + '-' * 100 + '\n'
                         print(job)
                         f.write(job)
 
                     if message.forward_date < data_limit:
                         print(f'end {group}')
-                        break
-                    print('-' * 100)
-                    f.write('-' * 100 + '\n')
+                        break                    
 # app.run(get_dialogs())
 app.run(main())
