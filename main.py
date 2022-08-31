@@ -2,15 +2,22 @@ from pyrogram import Client
 from datetime import datetime
 
 data = lambda x: int(datetime.now().strftime(x))
-api_id = 0
-api_hash = ''
+api_id = 19961353
+api_hash = '76556f555c06408a2c140ca7186071ee'
 
-phrases_jobs = ['python', 'django']
+phrases_jobs = ['python', 'django', 'back end']
 data_limit = datetime(data('%Y'), data('%m'), 1)
-groups_ids = []
+groups_ids = [-1001052551532, -288176910, -1001052992679, -1001303593538,
+              -1001150558288, -1001259501418, -1001393691685, -1001407720564,
+              -1001436635321, -288176910, -1001715022220]
 
 app = Client('search jobs', api_id=api_id, api_hash=api_hash)
 
+async def get_dialogs():
+    async with app:
+        async for dialog in app.get_dialogs():
+            print(dialog.chat.title or dialog.chat.first_name, dialog.chat.id)
+            
 async def main():
     with open('/tmp/jobs.txt', 'a') as f:
         async with app:
@@ -29,5 +36,5 @@ async def main():
                         break
                     print('-' * 100)
                     f.write('-' * 100 + '\n')
-
+# app.run(get_dialogs())
 app.run(main())
