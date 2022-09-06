@@ -1,3 +1,6 @@
+"""
+    assign for start: https://my.telegram.org/auth?to=apps
+"""
 from pyrogram import Client
 from datetime import datetime
 
