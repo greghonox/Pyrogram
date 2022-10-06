@@ -5,11 +5,11 @@ from pyrogram import Client
 from datetime import datetime
 
 data = lambda x: int(datetime.now().strftime(x))
-api_id = 0
+api_id = 1
 api_hash = ''
 
-phrases_jobs = ['python', 'django', 'back end']
-data_limit = datetime(data('%Y'), data('%m'), 1)
+phrases_jobs = ['python', 'django', 'back end', 'rpa']
+data_limit = datetime(data('%Y'), data('%m') - 1, 15)
 groups_ids = [-1001052551532, -288176910, -1001052992679, -1001303593538,
               -1001150558288, -1001259501418, -1001393691685, -1001407720564,
               -1001436635321, -288176910, -1001715022220]
@@ -24,18 +24,19 @@ async def get_dialogs():
 async def main():
     with open('/tmp/jobs.txt', 'a') as f:
         async with app:
-            for group in groups_ids:
+            lenght_group = len(groups_ids)
+            for e, group in enumerate(groups_ids):
                 async for message in app.get_chat_history(group):
-                    if message.text is None or message.forward_date is None:
+                    if message.text is None:
                         continue
 
                     if any(phrase.lower() in message.text.lower()  for phrase in phrases_jobs):
-                        job = f'{message.forward_date}\n{message.text}\n{message.link}\n' + '-' * 100 + '\n'
+                        job = f'{message.date}\n{message.text}\n{message.link}\n' + '-' * 100 + '\n'
                         print(job)
                         f.write(job)
 
-                    if message.forward_date < data_limit:
-                        print(f'end {group}')
+                    if message.date < data_limit:
+                        print(f'end {message.chat.title} ({e+1}/{lenght_group})')
                         break                    
 # app.run(get_dialogs())
 app.run(main())
