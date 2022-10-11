@@ -5,11 +5,11 @@ from pyrogram import Client
 from datetime import datetime
 
 data = lambda x: int(datetime.now().strftime(x))
-api_id = 1
+api_id = 0
 api_hash = ''
 
 phrases_jobs = ['python', 'django', 'back end', 'rpa']
-data_limit = datetime(data('%Y'), data('%m') - 1, 15)
+data_limit = datetime(data('%Y'), 10, 6)
 groups_ids = [-1001052551532, -288176910, -1001052992679, -1001303593538,
               -1001150558288, -1001259501418, -1001393691685, -1001407720564,
               -1001436635321, -288176910, -1001715022220]
@@ -20,7 +20,8 @@ async def get_dialogs():
     async with app:
         async for dialog in app.get_dialogs():
             print(dialog.chat.title or dialog.chat.first_name, dialog.chat.id)
-            
+
+jobs_search_link = []            
 async def main():
     with open('/tmp/jobs.txt', 'a') as f:
         async with app:
@@ -30,10 +31,14 @@ async def main():
                     if message.text is None:
                         continue
 
+                    if message.text.replace(' ', '').lower() in jobs_search_link:
+                        continue
+                    
                     if any(phrase.lower() in message.text.lower()  for phrase in phrases_jobs):
                         job = f'{message.date}\n{message.text}\n{message.link}\n' + '-' * 100 + '\n'
                         print(job)
                         f.write(job)
+                        jobs_search_link.append(message.text.replace(' ', '').lower())
 
                     if message.date < data_limit:
                         print(f'end {message.chat.title} ({e+1}/{lenght_group})')
